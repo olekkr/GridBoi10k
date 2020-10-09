@@ -7,21 +7,23 @@ class Grid {
 
 
   Grid () {
-    for (int i = 0; i < gridDimY; i++) {
-      for (int j = 0; j < gridDimX; j++) {
-        content[j][i] = new Cell(pos[0] + CellSize[0] * i, pos[1] + CellSize[1] * j, i, j, false, this);
+    for (int xx = 0; xx < gridDimX; xx++) {
+      for (int yy = 0; yy < gridDimY; yy++) {
+        content[xx][yy] = new Cell(pos[0] + CellSize[0] * xx, pos[1] + CellSize[1] * yy, xx, yy, false, this);
       }
     }
     gridBuff = new Boolean[gridDimX][gridDimY];
   }
+  
+  
 
   boolean click(float x, float y) {
-    for (int i = 0; i < gridDimX; i++) {
-      for (int j = 0; j < gridDimY; j++) {
-        if (content[i][j].pos.x < x && x < content[i][j].pos.x + CellSize[0] &&
-          content[i][j].pos.y < y && y < content[i][j].pos.y + CellSize[1]) {
-          content[i][j].flip();
-
+    for (int yy = 0; yy < gridDimY; yy++  ) {
+      for (int xx = 0; xx < gridDimX; xx++) {
+        if (content[xx][yy].pos.x < x && x < content[xx][yy].pos.x + CellSize[0] &&
+          content[xx][yy].pos.y < y && y < content[xx][yy].pos.y + CellSize[1]) {
+          content[xx][yy].flip();
+          println(xx,yy);
           return true;
         }
       }
@@ -48,7 +50,7 @@ class Grid {
 
   void drawAll() {
     for (int i = 0; i < gridDimX; i++) {
-      for (int j = 0; j < gridDimX; j++) {
+      for (int j = 0; j < gridDimY; j++) {
         content[i][j].render();
       }
     }
@@ -93,10 +95,10 @@ class Grid {
     }
     return gridBuff;
   }
-  void update(){ // updates from buffer
+  void update(Boolean[][] buff) { // updates from buffer
     for (int y = 0; y < gridDimY; y ++) {
       for (int x = 0; x < gridDimX; x ++) {
-        content[x][y].value = gridBuff[x][y];
+        content[x][y].value = buff[x][y];
       }
     }
   }
@@ -108,6 +110,14 @@ class Grid {
         content[i][j].live(gridBuff);
       }
     }
-    update();
+    update(gridBuff);
+  }
+  
+  void toggleD(){
+    for (Cell[] row : content){
+      for(Cell cell : row){
+        cell.debugMode = !cell.debugMode;
+      }
+    }
   }
 }

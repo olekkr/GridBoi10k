@@ -1,14 +1,16 @@
 import java.util.Iterator;
 
-color CellTC = #10ff10; // color of cell while true
-color CellFC = #ff1010; // color of cell while false
-color SeperatorC = #0000FF;
+color CellTC = #ffffff; // color of cell while true
+color CellFC = #030303; // color of cell while false
+color SeperatorC = #2000F0;
+
+color[] DCellC = {#000000, #fc0c0c, #fca80c, #fcf80c, #30fc0c, #0cfcd4 , #0c60fc, #d0d0d0, #ffffff };
 
 int[] dims = {800, 800};
-int gridDimX = 4;
-int gridDimY = 4;
+int gridDimX = 64;
+int gridDimY = 64;
 
-float[] CellSize = {(dims[0])/(gridDimX), (dims[1])/(gridDimY)};
+float[] CellSize = {(dims[0])/float(gridDimX), (dims[1])/float(gridDimY)};
 
 boolean active = true;
 boolean fuzzyEdge = false;
@@ -21,14 +23,15 @@ void setup() {
   grid = new Grid();
 }
 void draw() {
-  if (frameCount % 5 == 0) {
+  background(170);
+  if (frameCount % 1 == 0) {
     grid.drawAll();
-  }
-  if (active){
-    grid.live();
-  }
-  if (mousePressed) {
-    grid.click(mouseX, mouseY);
+    if (active) {
+      grid.live();
+    }
+    if (mousePressed) {
+      grid.click(mouseX, mouseY);
+    }
   }
 }
 
@@ -36,11 +39,12 @@ void keyPressed() {
   switch (key) {
   case ' ':
     grid = new Grid();
+    println("grid cleaned");
     return;
 
   case 'r':
     grid.randomize();
-    println("randomized");
+    println("grid randomized");
     return;
 
   case 's':
@@ -55,13 +59,21 @@ void keyPressed() {
 
   case '1':
     active = !active;
-    println("active mode set", active);
+    println("freeze set", !active);
     return;
-  
+
   case '2':
     fuzzyEdge = !fuzzyEdge;
     println("fuzzy edge mode", fuzzyEdge);
     return;
+    
+  case 'd':
+    grid.toggleD();
+    return;
+    
+    
+  default :
+  println(grid.content[8][2].fellows(), grid.content[0][2].value);
   }
 }
 
